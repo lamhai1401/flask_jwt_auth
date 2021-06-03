@@ -14,3 +14,7 @@ psql -h localhost -p 5432 --username=postgres --password
 # create database flask_jwt_auth_test;
 # CREATE DATABASE
 # \q
+
+python3 manage.py create_db
+python3 manage.py db init
+python3 manage.py db migrate
