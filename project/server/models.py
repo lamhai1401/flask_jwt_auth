@@ -1,7 +1,7 @@
 import datetime
 import jwt
 
-from project.server import app, db, bcrypt
+from project.server.app import app, db, bcrypt
 
 
 class User(db.Model):
@@ -35,7 +35,7 @@ class User(db.Model):
                 'iat': datetime.datetime.utcnow(),
                 'sub': user_id
             }
-            
+
             return jwt.encode(
                 payload,
                 app.config.get('SECRET_KEY'),
@@ -44,3 +44,18 @@ class User(db.Model):
         except Exception as e:
             print(e)
             return e
+
+    @staticmethod
+    def decode_auth_token(auth_token):
+        """
+        Decodes the auth token
+        :param auth_token:
+        :return: integer|string
+        """
+        try:
+            payload = jwt.decode(auth_token, app.config.get('SECRET_KEY'))
+            return payload['sub']
+        except jwt.ExpiredSignatureError:
+            return 'Signature expired. Please log in again.'
+        except jwt.InvalidTokenError:
+            return 'Invalid token. Please log in again.'
